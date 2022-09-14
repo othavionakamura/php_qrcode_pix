@@ -174,7 +174,6 @@ if ($gerar_qrcode){
    <div class="row row-cols-lg-auto g-3 align-items-center">
       <label for="chave" class="form-label">Chave Pix:</label>
       <input type="text" id="chave" name="chave" placeholder="Informe a chave pix" value="<?= $chave_pix;?>" size="50" maxlength="100" onclick="this.select();" data-toggle="tooltip" data-placement="right" title="Informe a chave pix de destino" required>
-      <div id="chaveHelp" class="form-text">A chave pode ser: Aleatória (EVP), E-mail, Telefone, CPF ou CNPJ.</div>
    </div>
    <div class="row row-cols-lg-auto g-3 align-items-center">
       <label for="valor" class="form-label">Valor a pagar:</label>

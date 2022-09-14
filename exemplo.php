@@ -43,49 +43,10 @@ $px[59]="RENATO MONTEIRO BATISTA"; //Nome do beneficiário/recebedor. Máximo: 2
 $px[60]="NATAL"; //Nome cidade onde é efetuada a transação. Máximo 15 caracteres.
 $px[62][05]="***"; //Identificador de transação, quando gerado automaticamente usar ***. Limite 25 caracteres. Vide nota abaixo.
 
-/*
-NOTA Sobre o 62/05, identificador de transação:
-Notei que logo do lançamento do pix os aplicativos não estavam implicando com esse campo e até mesmo 
-os BRCodes gerados em aplicativos de alguns bancos não apresentavam esse campo.
-Porém recentemente identifiquei que algumas instituições já não estão processando os pix na ausência
-desse campo. Trtaado na issue https://github.com/renatomb/php_qrcode_pix/issues/2
 
-Conforme o Manual de Padrões para Iniciação do Pix ver 2.2 na página 5, nota de rodapé, temos: "Conclui-se 
-que, se o gerador do QR optar por não utilizar um  transactionID, o valor ‘***’ deverá ser usado para indicar
-essa escolha." Diante disso estou atribuindo como sugestão neste exemplo, linha 38, o uso de *** no 6205.
-
-O conteúdo desse campo é gerado pelo recebedor do pix. Devendo ser um valor único para cada transação, ou ***
-quando não for usado pois esse passa a ser gerado automaticamente. Dada a necessidade de identificador único,
-caso haja a opção pelo uso do mesmo recomendo a utilização de um UUID vinculado ao sistema do recebedor, o que
-permitirá a conciliação dos pagamentos que foram recebidos.
-
-Entretanto, conforme discutido na issue https://github.com/bacen/pix-api/issues/214 o Banco Itaú bloqueia
-qualquer código de transação que não tenha sido gerado previamente no aplicativo da instituição. Necessário
-solicitar ao gerente da conta a liberação para que a conta do recebedor possa gerar qrcode do pix fora do
-aplicativo do banco. É possível que outras instituições passem a adotar esse posicionamento no futuro e até
-mesmo venham a cobrar por isso.
-
-Com o uso de QR Code dinâmicos é possível inclusive definir um webHook onde o cliente final seja notificado
-automaticamente quando determinada transação for recebida. Mas para isso consulte os detalhes da API da sua
-instituição.
-
-*/
-
-/*
-O campo 62/50 é um campo facultativo, que indica a versão do arranjo de pagamentos que está sendo usada.
-$px[62][50][00]="BR.GOV.BCB.BRCODE"; //Payment system specific template - GUI
-$px[62][50][01]="1.0.0"; //Payment system specific template - versão
-*/
-
-//Caso queira visualizar a matriz dos dados que serão montados no pix descomente a linha a seguir.
-//print_r($px);
 $pix=montaPix($px);
 
-/*
-# A função montaPix prepara todos os campos existentes antes do CRC (campo 63).
-# O CRC deve ser calculado em cima de todo o conteúdo, inclusive do próprio 63.
-# O CRC tem 4 dígitos, então o campo será um 6304.
-*/
+
 $pix.="6304"; //Adiciona o campo do CRC no fim da linha do pix.
 $pix.=crcChecksum($pix); //Calcula o checksum CRC16 e acrescenta ao final.
 
